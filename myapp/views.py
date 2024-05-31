@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 from google.oauth2 import service_account
@@ -6,18 +5,23 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 import io
 import os
+import json
 
 # Загрузка переменной среды GOOGLE_CREDENTIALS из файла .env
 GOOGLE_CREDENTIALS = os.getenv('GOOGLE_CREDENTIALS')
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
+
 # Проверка наличия переменной среды GOOGLE_CREDENTIALS
 if not GOOGLE_CREDENTIALS:
     raise ValueError("GOOGLE_CREDENTIALS environment variable is not set")
 
+# Преобразовать строку JSON в словарь
+google_credentials_dict = json.loads(GOOGLE_CREDENTIALS)
+
 # Создание объекта credentials из JSON-строки
 credentials = service_account.Credentials.from_service_account_info(
-    GOOGLE_CREDENTIALS, scopes=SCOPES)
+    google_credentials_dict, scopes=SCOPES)
 
 service = build('drive', 'v3', credentials=credentials)
 
