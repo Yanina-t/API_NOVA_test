@@ -5,12 +5,20 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 import io
+import os
 
-SERVICE_ACCOUNT_FILE = 'client_secret_api_nova.json'
+# Загрузка переменной среды GOOGLE_CREDENTIALS из файла .env
+GOOGLE_CREDENTIALS = os.getenv('GOOGLE_CREDENTIALS')
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+# Проверка наличия переменной среды GOOGLE_CREDENTIALS
+if not GOOGLE_CREDENTIALS:
+    raise ValueError("GOOGLE_CREDENTIALS environment variable is not set")
+
+# Создание объекта credentials из JSON-строки
+credentials = service_account.Credentials.from_service_account_info(
+    GOOGLE_CREDENTIALS, scopes=SCOPES)
+
 service = build('drive', 'v3', credentials=credentials)
 
 
