@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
-import dj_database_url
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+DATABASES = {
+    'default': dj_database_url.config(default='postgres://localhost')
+}
 
 # Application definition
 
